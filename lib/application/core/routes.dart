@@ -11,7 +11,7 @@ final GlobalKey<NavigatorState> _rootNavigatorKey =
 final GlobalKey<NavigatorState> _shellNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
 
-const String _basePath = '/beginning';
+const String _basePath = '/home';
 
 final routes = GoRouter(
   navigatorKey: _rootNavigatorKey,
