@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/core/page_config.dart';
+import 'package:todo_app/application/core/page_config.dart';
 
 class OverviewPage extends StatelessWidget {
   const OverviewPage({super.key});
@@ -13,7 +13,7 @@ class OverviewPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber,
+      color: Colors.tealAccent,
     );
   }
 }

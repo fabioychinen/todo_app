@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:todo_app/core/routes.dart';
+import 'package:todo_app/application/core/routes.dart';
 
 class BasicApp extends StatelessWidget {
   const BasicApp({super.key});
@@ -8,8 +8,8 @@ class BasicApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'TODO app',
-      localizationsDelegates: const [
+      title: 'ToDo App',
+      localizationsDelegates: [
         ...GlobalMaterialLocalizations.delegates,
         GlobalWidgetsLocalizations.delegate,
       ],
@@ -17,11 +17,15 @@ class BasicApp extends StatelessWidget {
       theme: ThemeData.from(
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.pinkAccent, brightness: Brightness.light),
+          seedColor: Colors.deepOrange,
+          brightness: Brightness.light,
+        ),
       ),
       darkTheme: ThemeData.from(
         useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepOrange,
+        ),
       ),
       routerConfig: routes,
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/core/page_config.dart';
+import 'package:todo_app/application/core/page_config.dart';
 
 class TasksPage extends StatelessWidget {
   const TasksPage({super.key});

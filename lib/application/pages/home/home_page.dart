@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo_app/core/page_config.dart';
+import 'package:todo_app/application/core/page_config.dart';
 import 'package:todo_app/application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/application/pages/overview/overview_page.dart';
 import 'package:todo_app/application/pages/settings/settings_page.dart';

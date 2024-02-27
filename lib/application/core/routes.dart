@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:todo_app/application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/application/pages/home/home_page.dart';
 import 'package:todo_app/application/pages/settings/settings_page.dart';
-import 'package:todo_app/core/go_route_observer.dart';
+import 'package:todo_app/application/core/go_route_observer.dart';
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>(debugLabel: 'root');
