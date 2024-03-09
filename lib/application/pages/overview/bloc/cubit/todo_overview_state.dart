@@ -1,7 +1,7 @@
 part of 'todo_overview_cubit.dart';
 
 
-sealed class ToDoOverviewCubitState extends Equatable {
+abstract class ToDoOverviewCubitState extends Equatable {
 
   const ToDoOverviewCubitState();
 
@@ -13,10 +13,18 @@ sealed class ToDoOverviewCubitState extends Equatable {
 }
 
 
-class ToDoOverviewCubitLoadingState extends ToDoOverviewCubitState {}
+class ToDoOverviewCubitLoadingState extends ToDoOverviewCubitState {
+
+  const ToDoOverviewCubitLoadingState();
+
+}
 
 
-class ToDoOverviewCubitErrorState extends ToDoOverviewCubitState {}
+class ToDoOverviewCubitErrorState extends ToDoOverviewCubitState {
+
+  const ToDoOverviewCubitErrorState();
+
+}
 
 
 class ToDoOverviewCubitLoadedState extends ToDoOverviewCubitState {

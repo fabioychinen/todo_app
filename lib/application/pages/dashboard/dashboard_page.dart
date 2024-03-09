@@ -6,7 +6,7 @@ class DashboardPage extends StatelessWidget {
 
   static const pageConfig = PageConfig(
     icon: Icons.dashboard_rounded,
-    name: 'dashboard',
+    name: 'Dashboard',
     child: DashboardPage(),
   );
 

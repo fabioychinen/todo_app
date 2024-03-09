@@ -8,10 +8,7 @@ import 'package:todo_app/domain/entities/unique_id.dart';
 void main() {
   Widget widgetUnderTest({required List<ToDoCollection> collections}) {
     return const MaterialApp(
-      home: Scaffold(
-        body: ToDoOverviewLoaded(collections: []),
-      ),
-    );
+        home: Scaffold(body: ToDoOverviewLoaded(collections: [])));
   }
 
   group('ToDoOverviewLoadedState test:', () {

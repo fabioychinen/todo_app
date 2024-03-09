@@ -4,8 +4,9 @@ import 'package:todo_app/domain/entities/todo_collection.dart';
 import 'package:todo_app/domain/failures/failures.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 
-class LoadToDoCollections implements UseCase<void, NoParams> {
+class LoadToDoCollections implements UseCase<List<ToDoCollection>, NoParams> {
   const LoadToDoCollections({required this.toDoRepository});
+
   final ToDoRepository toDoRepository;
 
   @override

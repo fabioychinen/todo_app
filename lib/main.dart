@@ -5,8 +5,10 @@ import 'package:todo_app/data/repositories/todo_repository_mock.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 
 void main() {
-  runApp(RepositoryProvider<ToDoRepository>(
-    create: (context) => ToDoRepositoryMock(),
-    child: const BasicApp(),
-  ));
+  runApp(
+    RepositoryProvider<ToDoRepository>(
+      create: (context) => ToDoRepositoryMock(),
+      child: const BasicApp(),
+    ),
+  );
 }

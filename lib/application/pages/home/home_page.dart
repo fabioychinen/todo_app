@@ -5,7 +5,6 @@ import 'package:todo_app/application/core/page_config.dart';
 import 'package:todo_app/application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/application/pages/overview/overview_page.dart';
 import 'package:todo_app/application/pages/settings/settings_page.dart';
-import 'package:todo_app/application/pages/tasks/tasks_page.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({
@@ -13,18 +12,17 @@ class HomePage extends StatefulWidget {
     required String tab,
   }) : index = tabs.indexWhere((element) => element.name == tab);
 
+  static const PageConfig pageConfig = PageConfig(
+    icon: Icons.home_rounded,
+    name: 'home',
+  );
+
   final int index;
 
   static const tabs = [
     DashboardPage.pageConfig,
     OverviewPage.pageConfig,
-    TasksPage.pageConfig,
   ];
-
-  static const pageConfig = PageConfig(
-    icon: Icons.home_rounded,
-    name: 'home',
-  );
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -41,6 +39,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
     return Scaffold(
       body: SafeArea(
         child: AdaptiveLayout(
@@ -56,12 +55,10 @@ class _HomePageState extends State<HomePage> {
                   ),
                   selectedLabelTextStyle:
                       TextStyle(color: theme.colorScheme.onBackground),
-                  selectedIconTheme: IconThemeData(
-                    color: theme.colorScheme.onBackground,
-                  ),
+                  selectedIconTheme:
+                      IconThemeData(color: theme.colorScheme.onBackground),
                   unselectedIconTheme: IconThemeData(
-                    color: theme.colorScheme.onBackground.withOpacity(0.5),
-                  ),
+                      color: theme.colorScheme.onBackground.withOpacity(0.5)),
                   onDestinationSelected: (index) =>
                       _tapOnNavigationDestination(context, index),
                   selectedIndex: widget.index,
@@ -81,8 +78,8 @@ class _HomePageState extends State<HomePage> {
                 builder: (_) => AdaptiveScaffold.standardBottomNavigationBar(
                   destinations: destinations,
                   currentIndex: widget.index,
-                  onDestinationSelected: (index) =>
-                      _tapOnNavigationDestination(context, index),
+                  onDestinationSelected: (value) =>
+                      _tapOnNavigationDestination(context, value),
                 ),
               ),
             },
@@ -92,7 +89,7 @@ class _HomePageState extends State<HomePage> {
               Breakpoints.smallAndUp: SlotLayout.from(
                 key: const Key('primary-body-small'),
                 builder: (_) => HomePage.tabs[widget.index].child,
-              )
+              ),
             },
           ),
           secondaryBody: SlotLayout(
@@ -100,7 +97,7 @@ class _HomePageState extends State<HomePage> {
               Breakpoints.mediumAndUp: SlotLayout.from(
                 key: const Key('secondary-body-medium'),
                 builder: AdaptiveScaffold.emptyBuilder,
-              )
+              ),
             },
           ),
         ),

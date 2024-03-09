@@ -32,8 +32,8 @@ void main() {
         (widgetTester) async {
           whenListen(
             mockToDoOverviewCubit,
-            Stream.fromIterable([ToDoOverviewCubitLoadingState()]),
-            initialState: ToDoOverviewCubitLoadingState(),
+            Stream.fromIterable([const ToDoOverviewCubitLoadingState()]),
+            initialState: const ToDoOverviewCubitLoadingState(),
           );
 
           await widgetTester
@@ -61,7 +61,7 @@ void main() {
             mockToDoOverviewCubit,
             Stream.fromIterable(
                 [const ToDoOverviewCubitLoadedState(collections: [])]),
-            initialState: ToDoOverviewCubitLoadingState(),
+            initialState: const ToDoOverviewCubitLoadingState(),
           );
 
           await widgetTester

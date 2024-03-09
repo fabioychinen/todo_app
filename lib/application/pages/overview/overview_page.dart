@@ -9,6 +9,7 @@ import 'package:todo_app/domain/use_cases/load_todo_collections.dart';
 
 class OverviewPageProvider extends StatelessWidget {
   const OverviewPageProvider({super.key});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -36,17 +37,16 @@ class OverviewPage extends StatelessWidget {
     return Container(
       color: Colors.tealAccent,
       child: BlocBuilder<ToDoOverviewCubit, ToDoOverviewCubitState>(
-          builder: (context, state) {
-        if (state is ToDoOverviewCubitLoadingState) {
-          return const ToDoOverviewLoading();
-        } else if (state is ToDoOverviewCubitLoadedState) {
-          return ToDoOverviewLoaded(
-            collections: state.collections,
-          );
-        } else {
-          return const ToDoOverviewError();
-        }
-      }),
+        builder: (context, state) {
+          if (state is ToDoOverviewCubitLoadingState) {
+            return const ToDoOverviewLoading();
+          } else if (state is ToDoOverviewCubitLoadedState) {
+            return ToDoOverviewLoaded(collections: state.collections);
+          } else {
+            return const ToDoOverviewError();
+          }
+        },
+      ),
     );
   }
 }
