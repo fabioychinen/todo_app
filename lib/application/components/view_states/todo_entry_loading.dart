@@ -5,6 +5,10 @@ class ToDoEntryItemLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const CircularProgressIndicator();
+    return const Center(
+        child: CircularProgressIndicator(
+      color: Colors.blueAccent,
+      backgroundColor: Colors.grey,
+    ));
   }
 }

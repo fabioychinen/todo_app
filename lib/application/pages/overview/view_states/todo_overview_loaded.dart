@@ -14,11 +14,13 @@ class ToDoOverviewLoaded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context)
+        .colorScheme; // Moved this line outside the ListView.builder
+
     return ListView.builder(
       itemCount: collections.length,
       itemBuilder: (context, index) {
         final item = collections[index];
-        final colorScheme = Theme.of(context).colorScheme;
 
         return ListTile(
           tileColor: colorScheme.surface,

@@ -49,7 +49,6 @@ void main() {
     ]);
 
     final expectedFailure =
-
         Left<Failure, List<ToDoCollection>>(ServerFailure());
 
 
@@ -60,13 +59,11 @@ void main() {
       setUp: () {
 
         when(() => mockToDoOverviewCubit(NoParams()))
-
             .thenAnswer((invocation) => Future.value(expectedValue));
 
       },
 
       build: () =>
-
           ToDoOverviewCubit(loadToDoCollections: mockToDoOverviewCubit),
 
       act: (ToDoOverviewCubit bloc) => bloc.readToDoCollections(),
@@ -89,18 +86,17 @@ void main() {
       setUp: () {
 
         when(() => mockToDoOverviewCubit(NoParams()))
-
             .thenAnswer((invocation) => Future.value(expectedFailure));
 
       },
 
       build: () =>
-
           ToDoOverviewCubit(loadToDoCollections: mockToDoOverviewCubit),
 
       act: (ToDoOverviewCubit bloc) => bloc.readToDoCollections(),
 
       expect: () => <ToDoOverviewCubitState>[
+
         const ToDoOverviewCubitLoadingState(),
 
         const ToDoOverviewCubitErrorState()
