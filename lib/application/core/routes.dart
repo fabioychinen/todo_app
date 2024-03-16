@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 import 'package:todo_app/application/pages/create_todo_collection/create_todo_collection_page.dart';
 import 'package:todo_app/application/pages/create_todo_entry/create_todo_entry_page.dart';
@@ -49,7 +48,7 @@ final routes = GoRouter(
       path: '$_basePath/overview/${CreateToDoCollectionPage.pageConfig.name}',
       builder: (context, state) => Scaffold(
         appBar: AppBar(
-          title: const Text('Create Collection'),
+          title: const Text('create collection'),
           leading: BackButton(
             onPressed: () {
               if (context.canPop()) {
@@ -105,7 +104,7 @@ final routes = GoRouter(
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Details'),
+            title: const Text('details'),
             leading: BackButton(
               onPressed: () {
                 if (context.canPop()) {
