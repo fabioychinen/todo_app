@@ -4,6 +4,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 
+import 'package:todo_app/core/use_case.dart';
+
+
+import 'package:todo_app/domain/entities/todo_entry.dart';
+
+
 import 'package:todo_app/domain/entities/unique_id.dart';
 
 
@@ -37,6 +43,7 @@ class CreateToDoEntryPageCubit extends Cubit<CreateToDoEntryPageState> {
 
     ValidationStatus currentStatus = ValidationStatus.pending;
 
+
     if (description == null || description.isEmpty || description.length < 2) {
 
       currentStatus = ValidationStatus.error;
@@ -67,7 +74,23 @@ class CreateToDoEntryPageCubit extends Cubit<CreateToDoEntryPageState> {
   }
 
 
-  void submit() {}
+  void submit() async {
+
+    await addToDoEntry.call(
+
+      ToDoEntryParams(
+
+        collectionId: collectionId,
+
+        entry:
+
+            ToDoEntry.empty().copyWith(description: state.description?.value),
+
+      ),
+
+    );
+
+  }
 
 }
 

@@ -24,9 +24,7 @@ class OverviewPageProvider extends StatelessWidget {
 }
 
 class OverviewPage extends StatelessWidget {
-  const OverviewPage({
-    super.key,
-  });
+  const OverviewPage({super.key});
 
   static const pageConfig = PageConfig(
     icon: Icons.work_history_rounded,
@@ -40,15 +38,12 @@ class OverviewPage extends StatelessWidget {
       color: Colors.tealAccent,
       child: BlocBuilder<ToDoOverviewCubit, ToDoOverviewCubitState>(
         builder: (context, state) {
-          switch (state.runtimeType) {
-            case const (ToDoOverviewCubitLoadingState):
-              return const ToDoOverviewLoading();
-            case const (ToDoOverviewCubitLoadedState):
-              return ToDoOverviewLoaded(
-                  collections:
-                      (state as ToDoOverviewCubitLoadedState).collections);
-            default:
-              return const ToDoOverviewError();
+          if (state is ToDoOverviewCubitLoadingState) {
+            return const ToDoOverviewLoading();
+          } else if (state is ToDoOverviewCubitLoadedState) {
+            return ToDoOverviewLoaded(collections: state.collections);
+          } else {
+            return const ToDoOverviewError();
           }
         },
       ),
