@@ -46,14 +46,16 @@ class DashboardPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardPageCubit, DashboardPageCubitState>(
-        builder: (context, state) {
-      if (state is DashboardPageCubitLoadingState) {
-        return const DashboardPageLoading();
-      } else if (state is DashboardPageCubitLoadedState) {
-        return DashboardPageLoaded(uncompletedTasks: state.uncompletedEntries);
-      } else {
-        return const DashboardPageError();
-      }
-    });
+      builder: (context, state) {
+        if (state is DashboardPageCubitLoadingState) {
+          return const DashboardPageLoading();
+        } else if (state is DashboardPageCubitLoadedState) {
+          return DashboardPageLoaded(
+              uncompletedTasks: state.uncompletedEntries);
+        } else {
+          return const DashboardPageError();
+        }
+      },
+    );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:todo_app/domain/entities/unique_id.dart';
 import 'package:todo_app/domain/use_cases/load_overview_todo_collections.dart';
 import 'package:todo_app/domain/use_cases/load_todo_entry.dart';
@@ -26,56 +25,59 @@ class DashboardPageCubit extends Cubit<DashboardPageCubitState> {
     );
 
     try {
-      final collectionsFuture = loadOverviewToDoCollections.call(
+      final collectionsEither = await loadOverviewToDoCollections.call(
         NoParams(),
       );
-      final collections = await collectionsFuture;
-
-      if (collections.isLeft) {
-        emit(
-          DashboardPageCubitErrorState(),
-        );
-      } else {
-        List<EntryId> totalEntryIds = [];
-        int uncompletedEntries = 0;
-
-        for (final collection in collections.right) {
-          final collectionEntryIds = await loadToDoEntryIdsForCollection(
-            CollectionIdParams(
-              collectionId: collection.id,
-            ),
+      final collections = await collectionsEither.fold(
+        (failure) {
+          emit(
+            DashboardPageCubitErrorState(),
           );
+          return [];
+        },
+        (collections) => collections,
+      );
 
-          if (collectionEntryIds.isLeft) {
+      List<EntryId> totalEntryIds = [];
+      List<Future> entryFutures = [];
+
+      for (final collection in collections) {
+        final collectionEntryIdsEither = await loadToDoEntryIdsForCollection(
+          CollectionIdParams(collectionId: collection.id),
+        );
+        await collectionEntryIdsEither.fold(
+          (failure) {
             emit(
               DashboardPageCubitErrorState(),
             );
-          } else {
-            totalEntryIds.addAll(collectionEntryIds.right);
-
-            for (final entryId in collectionEntryIds.right) {
-              var toDoEntry = await loadToDoEntry(
-                ToDoEntryIdsParams(
-                  collectionId: collection.id,
-                  entryId: entryId,
-                ),
-              );
-
-              if (toDoEntry.isLeft) {
-                emit(DashboardPageCubitErrorState());
-              } else {
-                if (!toDoEntry.right.isDone) {
-                  uncompletedEntries++;
-                }
-              }
-            }
-          }
-        }
-
-        emit(DashboardPageCubitLoadedState(
-          uncompletedEntries: uncompletedEntries,
-        ));
+            return [];
+          },
+          (collectionEntryIds) {
+            totalEntryIds.addAll(collectionEntryIds);
+            entryFutures
+                .addAll(collectionEntryIds.map((entryId) => loadToDoEntry(
+                      ToDoEntryIdsParams(
+                        collectionId: collection.id,
+                        entryId: entryId,
+                      ),
+                    )));
+          },
+        );
       }
+
+      final todoEntries = await Future.wait(entryFutures);
+
+      int uncompletedEntries = 0;
+
+      for (final toDoEntry in todoEntries) {
+        if (!toDoEntry.isDone) {
+          uncompletedEntries++;
+        }
+      }
+
+      emit(DashboardPageCubitLoadedState(
+        uncompletedEntries: uncompletedEntries,
+      ));
     } on Exception {
       emit(
         DashboardPageCubitErrorState(),

@@ -48,7 +48,7 @@ class DashboardPageLoaded extends StatelessWidget {
                   Text(
                     (uncompletedTasks > 0)
                         ? 'Way to go, only a little bit left!'
-                        : 'Add some more tasks or go celebrate!',
+                        : 'Add more task',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
