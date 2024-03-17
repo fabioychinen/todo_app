@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:todo_app/domain/entities/unique_id.dart';
+import 'package:todo_app/domain/repositories/todo_repository.dart';
+import 'package:todo_app/domain/use_cases/load_todo_entry_ids_for_collection.dart';
 import 'package:todo_app/application/core/page_config.dart';
 import 'package:todo_app/application/pages/detail/bloc/cubit/todo_detail_cubit.dart';
 import 'package:todo_app/application/pages/detail/view_states/todo_detail_error.dart';
 import 'package:todo_app/application/pages/detail/view_states/todo_detail_loaded.dart';
 import 'package:todo_app/application/pages/detail/view_states/todo_detail_loading.dart';
-import 'package:todo_app/domain/entities/unique_id.dart';
-import 'package:todo_app/domain/repositories/todo_repository.dart';
-import 'package:todo_app/domain/use_cases/load_todo_entry_ids_for_collection.dart';
 
 class ToDoDetailPageProvider extends StatelessWidget {
   const ToDoDetailPageProvider({
@@ -43,7 +43,7 @@ class ToDoDetailPage extends StatelessWidget {
 
   static const pageConfig = PageConfig(
     icon: Icons.details_rounded,
-    name: 'Detail',
+    name: 'detail',
     child: Placeholder(),
   );
 

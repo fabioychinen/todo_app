@@ -5,13 +5,9 @@ part 'todo_entry_model.g.dart';
 
 @JsonSerializable()
 class ToDoEntryModel extends Equatable {
-  final String description;
-  final bool isDone;
-  final String id;
-
   const ToDoEntryModel({
-    required this.id,
     required this.description,
+    required this.id,
     required this.isDone,
   });
 
@@ -19,6 +15,10 @@ class ToDoEntryModel extends Equatable {
       _$ToDoEntryModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$ToDoEntryModelToJson(this);
+
+  final String description;
+  final bool isDone;
+  final String id;
 
   @override
   List<Object?> get props => [

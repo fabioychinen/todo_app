@@ -10,15 +10,17 @@ import 'package:todo_app/application/pages/overview/overview_page.dart';
 import 'package:todo_app/application/pages/settings/settings_page.dart';
 
 class HomePageProvider extends StatelessWidget {
-  const HomePageProvider({super.key, required this.tab});
+  const HomePageProvider({
+    super.key,
+    required this.tab,
+  });
 
   final String tab;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<NavigationToDoCubit>(
-      create: (_) => NavigationToDoCubit(),
-      child: HomePage(tab: tab),
+    return HomePage(
+      tab: tab,
     );
   }
 }
@@ -27,18 +29,21 @@ class HomePage extends StatefulWidget {
   HomePage({
     super.key,
     required String tab,
-  }) : index = tabs.indexWhere((element) => element.name == tab);
+  }) : index = tabs.indexWhere(
+          (element) => element.name == tab,
+        );
 
-  static const PageConfig pageConfig = PageConfig(
-    icon: Icons.home_rounded,
-    name: 'home',
-  );
-
-  final int index;
   static const tabs = [
     DashboardPage.pageConfig,
     OverviewPage.pageConfig,
   ];
+
+  final int index;
+
+  static const pageConfig = PageConfig(
+    icon: Icons.home_rounded,
+    name: 'home',
+  );
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -47,23 +52,26 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final destinations = HomePage.tabs
       .map(
-        (page) =>
-            NavigationDestination(icon: Icon(page.icon), label: page.name),
+        (page) => NavigationDestination(
+          icon: Icon(page.icon),
+          label: page.name,
+        ),
       )
       .toList();
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: BlocListener<NavigationToDoCubit, NavigationToDoCubitState>(
-          listenWhen: (previous, current) =>
-              previous.isSecondBodyDisplayed != current.isSecondBodyDisplayed,
           listener: (context, state) {
             if (context.canPop() && (state.isSecondBodyDisplayed ?? false)) {
               context.pop();
             }
           },
+          listenWhen: (previous, current) =>
+              previous.isSecondBodyDisplayed != current.isSecondBodyDisplayed,
           child: AdaptiveLayout(
             primaryNavigation: SlotLayout(
               config: <Breakpoint, SlotLayoutConfig>{
@@ -71,18 +79,30 @@ class _HomePageState extends State<HomePage> {
                   key: const Key('primary-navigation-medium'),
                   builder: (context) => AdaptiveScaffold.standardNavigationRail(
                     trailing: IconButton(
+                      key: const Key('open-settings'),
                       onPressed: () =>
                           context.pushNamed(SettingsPage.pageConfig.name),
                       icon: Icon(SettingsPage.pageConfig.icon),
                     ),
-                    onDestinationSelected: (index) =>
-                        _tapOnNavigationDestination(context, index),
-                    selectedIndex: widget.index,
                     destinations: destinations
                         .map(
-                          (_) => AdaptiveScaffold.toRailDestination(_),
+                          (destination) => AdaptiveScaffold.toRailDestination(
+                            destination,
+                          ),
                         )
                         .toList(),
+                    onDestinationSelected: (index) =>
+                        _tapOnNavigationDesination(context, index),
+                    selectedIndex: widget.index,
+                    selectedLabelTextStyle: TextStyle(
+                      color: theme.colorScheme.onBackground,
+                    ),
+                    selectedIconTheme: IconThemeData(
+                      color: theme.colorScheme.onBackground,
+                    ),
+                    unselectedIconTheme: IconThemeData(
+                      color: theme.colorScheme.onBackground.withOpacity(0.5),
+                    ),
                   ),
                 ),
               },
@@ -95,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                     destinations: destinations,
                     currentIndex: widget.index,
                     onDestinationSelected: (value) =>
-                        _tapOnNavigationDestination(context, value),
+                        _tapOnNavigationDesination(context, value),
                   ),
                 ),
               },
@@ -120,7 +140,6 @@ class _HomePageState extends State<HomePage> {
                               final selectedId = state.selectedCollectionId;
                               final isSecondBodyDisplayed =
                                   Breakpoints.mediumAndUp.isActive(context);
-
                               context
                                   .read<NavigationToDoCubit>()
                                   .secondBodyHasChanged(
@@ -129,12 +148,15 @@ class _HomePageState extends State<HomePage> {
                                   );
 
                               if (selectedId == null) {
-                                return const Placeholder();
+                                return Container();
+                              } else {
+                                return ToDoDetailPageProvider(
+                                  key: Key(
+                                    selectedId.value,
+                                  ),
+                                  collectionId: selectedId,
+                                );
                               }
-                              return ToDoDetailPageProvider(
-                                key: Key(selectedId.value),
-                                collectionId: selectedId,
-                              );
                             },
                           ),
                 ),
@@ -146,7 +168,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _tapOnNavigationDestination(BuildContext context, int index) =>
+  void _tapOnNavigationDesination(BuildContext context, int index) =>
       context.goNamed(
         HomePage.pageConfig.name,
         pathParameters: {

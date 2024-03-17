@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo_app/application/core/page_config.dart';
-import 'package:todo_app/application/pages/create_todo_collection/bloc/cubit/create_todo_collection_page_cubit.dart';
-import 'package:todo_app/domain/entities/todo_color.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 import 'package:todo_app/domain/use_cases/create_todo_collection.dart';
+import 'package:todo_app/application/core/page_config.dart';
+import 'package:todo_app/application/pages/create_todo_collection/bloc/cubit/create_todo_collection_page_cubit.dart';
+import 'package:todo_app/application/pages/create_todo_collection/widgets/todo_collection_color_picker_dialog.dart';
 
 class CreateToDoCollectionPageProvider extends StatelessWidget {
   const CreateToDoCollectionPageProvider({super.key});
@@ -24,11 +24,13 @@ class CreateToDoCollectionPageProvider extends StatelessWidget {
 }
 
 class CreateToDoCollectionPage extends StatefulWidget {
-  const CreateToDoCollectionPage({super.key});
+  const CreateToDoCollectionPage({
+    super.key,
+  });
 
   static const pageConfig = PageConfig(
-    name: 'create_todo_collection',
     icon: Icons.add_task_rounded,
+    name: 'create_todo_collection',
     child: CreateToDoCollectionPageProvider(),
   );
 
@@ -49,19 +51,25 @@ class _CreateToDoCollectionPageState extends State<CreateToDoCollectionPage> {
         child: Column(
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Title'),
+              decoration: const InputDecoration(
+                labelText: 'Title',
+              ),
               onChanged: (value) => context
                   .read<CreateToDoCollectionPageCubit>()
                   .titleChanged(value),
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return 'Please enter a title!';
+                  return 'Please enter a title';
                 }
                 return null;
               },
             ),
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Color'),
+            ToDoCollectionColorPicker(),
+
+            /*TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Color',
+              ),
               onChanged: (value) => context
                   .read<CreateToDoCollectionPageCubit>()
                   .colorChanged(value),
@@ -76,16 +84,16 @@ class _CreateToDoCollectionPageState extends State<CreateToDoCollectionPage> {
                 }
                 return null;
               },
-            ),
+            ),*/
             const SizedBox(
               height: 16,
             ),
             ElevatedButton(
               onPressed: () {
-                final isValide = _formKey.currentState?.validate();
-                if (isValide == true) {
+                final isValid = _formKey.currentState?.validate();
+                if (isValid == true) {
                   context.read<CreateToDoCollectionPageCubit>().submit().then(
-                        (_) => context.pop(true),
+                        (value) => context.pop(true),
                       );
                 }
               },

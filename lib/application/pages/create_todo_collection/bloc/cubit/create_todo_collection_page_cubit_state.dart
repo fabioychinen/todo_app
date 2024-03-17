@@ -1,31 +1,28 @@
 part of 'create_todo_collection_page_cubit.dart';
 
-
-class CreateToDoCollectionPageState extends Equatable {
+@immutable
+class CreateToDoCollectionPageCubitState extends Equatable {
+  const CreateToDoCollectionPageCubitState({this.title, this.color});
 
   final String? title;
+  final Color? color;
 
-  final String? color;
-
-
-  const CreateToDoCollectionPageState({this.title, this.color});
-
-
-  CreateToDoCollectionPageState copyWith({String? title, String? color}) {
-
-    return CreateToDoCollectionPageState(
-
+  CreateToDoCollectionPageCubitState copyWith({
+    String? title,
+    Color? color,
+  }) {
+    return CreateToDoCollectionPageCubitState(
       color: color ?? this.color,
-
       title: title ?? this.title,
-
     );
-
   }
 
-
   @override
-
-  List<Object?> get props => [title, color];
-
+  List<Object?> get props => [
+        title,
+        color,
+      ];
 }
+
+class CreateToDoCollectionPageCubitInitial
+    extends CreateToDoCollectionPageCubitState {}

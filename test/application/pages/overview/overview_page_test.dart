@@ -15,7 +15,7 @@ void main() {
   Widget widgetUnderTest({required ToDoOverviewCubit cubit}) {
     return MaterialApp(
       home: BlocProvider<ToDoOverviewCubit>(
-        create: (context) => cubit..readToDoCollections(),
+        create: (context) => cubit..readToDoOverviewCollections(),
         child: const Scaffold(body: OverviewPage()),
       ),
     );
@@ -32,8 +32,8 @@ void main() {
         (widgetTester) async {
           whenListen(
             mockToDoOverviewCubit,
-            Stream.fromIterable([const ToDoOverviewCubitLoadingState()]),
-            initialState: const ToDoOverviewCubitLoadingState(),
+            Stream.fromIterable([ToDoOverviewCubitLoadingState()]),
+            initialState: ToDoOverviewCubitLoadingState(),
           );
 
           await widgetTester
@@ -51,7 +51,7 @@ void main() {
             ToDoCollection(
               id: CollectionId.fromUniqueString(1.toString()),
               title: 'Overview test',
-              color: ToDoColor(
+              todoColor: const ToDoColor(
                 colorIndex: 1,
               ),
             ),
@@ -60,8 +60,8 @@ void main() {
           whenListen(
             mockToDoOverviewCubit,
             Stream.fromIterable(
-                [const ToDoOverviewCubitLoadedState(collections: [])]),
-            initialState: const ToDoOverviewCubitLoadingState(),
+                [ToDoOverviewCubitLoadedState(collections: const [])]),
+            initialState: ToDoOverviewCubitLoadingState(),
           );
 
           await widgetTester

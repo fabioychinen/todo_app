@@ -1,42 +1,25 @@
 part of 'todo_overview_cubit.dart';
 
-
 abstract class ToDoOverviewCubitState extends Equatable {
-
-  const ToDoOverviewCubitState();
-
-
   @override
-
-  List<Object> get props => [];
-
+  List<Object?> get props => [];
 }
 
+class ToDoOverviewCubitInitial extends ToDoOverviewCubitState {}
 
-class ToDoOverviewCubitLoadingState extends ToDoOverviewCubitState {
+class ToDoOverviewCubitLoadingState extends ToDoOverviewCubitState {}
 
-  const ToDoOverviewCubitLoadingState();
-
-}
-
-
-class ToDoOverviewCubitErrorState extends ToDoOverviewCubitState {
-
-  const ToDoOverviewCubitErrorState();
-
-}
-
+class ToDoOverviewCubitErrorState extends ToDoOverviewCubitState {}
 
 class ToDoOverviewCubitLoadedState extends ToDoOverviewCubitState {
-
-  const ToDoOverviewCubitLoadedState({required this.collections});
-
+  ToDoOverviewCubitLoadedState({
+    required this.collections,
+  });
 
   final List<ToDoCollection> collections;
 
-
   @override
-
-  List<Object> get props => [collections];
-
+  List<Object> get props => [
+        collections,
+      ];
 }

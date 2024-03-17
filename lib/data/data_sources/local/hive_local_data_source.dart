@@ -132,4 +132,30 @@ class HiveLocalDataSource implements ToDoLocalDataSourceInterface {
 
     return updatedEntry;
   }
+
+  @override
+  Future<bool> deleteToDoCollection({required String collectionId}) async {
+    final collectionBox = await _openCollectionBox();
+    final collection =
+        (await collectionBox.get(collectionId))?.cast<String, dynamic>();
+
+    if (collection == null) {
+      throw CollectionNotFoundException();
+    }
+
+    final entryBox = await _openEntryBox();
+    final entryList = await entryBox.get(collectionId);
+
+    if (entryList == null) {
+      throw EntryNotFoundException();
+    }
+
+    final entryIdList = entryList.cast<String, dynamic>().keys.toList();
+
+    await entryBox.deleteAll(entryIdList);
+
+    await collectionBox.delete(collectionId);
+
+    return true;
+  }
 }

@@ -8,8 +8,8 @@ part of 'todo_entry_model.dart';
 
 ToDoEntryModel _$ToDoEntryModelFromJson(Map<String, dynamic> json) =>
     ToDoEntryModel(
-      id: json['id'] as String,
       description: json['description'] as String,
+      id: json['id'] as String,
       isDone: json['isDone'] as bool,
     );
 

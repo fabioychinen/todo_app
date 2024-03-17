@@ -16,8 +16,8 @@ class NoParams extends Params {
   List<Object?> get props => [];
 }
 
-class ToDoEntryIdsParam extends Params {
-  ToDoEntryIdsParam({
+class ToDoEntryIdsParams extends Params {
+  ToDoEntryIdsParams({
     required this.collectionId,
     required this.entryId,
   }) : super();
@@ -26,18 +26,23 @@ class ToDoEntryIdsParam extends Params {
   final CollectionId collectionId;
 
   @override
-  List<Object> get props => [collectionId, entryId];
+  List<Object?> get props => [
+        entryId,
+        collectionId,
+      ];
 }
 
-class CollectionIdParam extends Params {
-  CollectionIdParam({
+class CollectionIdParams extends Params {
+  CollectionIdParams({
     required this.collectionId,
   }) : super();
 
   final CollectionId collectionId;
 
   @override
-  List<Object> get props => [collectionId];
+  List<Object?> get props => [
+        collectionId,
+      ];
 }
 
 class ToDoCollectionParams extends Params {
@@ -48,7 +53,9 @@ class ToDoCollectionParams extends Params {
   final ToDoCollection collection;
 
   @override
-  List<Object> get props => [collection];
+  List<Object?> get props => [
+        collection,
+      ];
 }
 
 class ToDoEntryParams extends Params {
@@ -61,5 +68,8 @@ class ToDoEntryParams extends Params {
   final CollectionId collectionId;
 
   @override
-  List<Object> get props => [entry, collectionId];
+  List<Object?> get props => [
+        entry,
+        collectionId,
+      ];
 }

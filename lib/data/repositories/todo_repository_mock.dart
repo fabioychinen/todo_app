@@ -19,9 +19,11 @@ class ToDoRepositoryMock implements ToDoRepository {
   final toDoCollections = List<ToDoCollection>.generate(
     10,
     (index) => ToDoCollection(
-      id: CollectionId.fromUniqueString(index.toString()),
-      title: 'title $index',
-      color: ToDoColor(
+      id: CollectionId.fromUniqueString(
+        index.toString(),
+      ),
+      title: 'Title $index',
+      todoColor: ToDoColor(
         colorIndex: index % ToDoColor.predefinedColors.length,
       ),
     ),
@@ -35,7 +37,11 @@ class ToDoRepositoryMock implements ToDoRepository {
         () => Right(toDoCollections),
       );
     } on Exception catch (e) {
-      return Future.value(Left(ServerFailure(stackTrace: e.toString())));
+      return Future.value(
+        Left(
+          ServerFailure(stackTrace: e.toString()),
+        ),
+      );
     }
   }
 
@@ -46,13 +52,16 @@ class ToDoRepositoryMock implements ToDoRepository {
       final selectedEntryItem = toDoEntries.firstWhere(
         (element) => element.id == entryId,
       );
-
       return Future.delayed(
         const Duration(milliseconds: 200),
         () => Right(selectedEntryItem),
       );
     } on Exception catch (e) {
-      return Future.value(Left(ServerFailure(stackTrace: e.toString())));
+      return Future.value(
+        Left(
+          ServerFailure(stackTrace: e.toString()),
+        ),
+      );
     }
   }
 
@@ -65,54 +74,89 @@ class ToDoRepositoryMock implements ToDoRepository {
       if (toDoEntries.length < endIndex) {
         endIndex = toDoEntries.length;
       }
+
       List<EntryId> entryIds = [];
 
       if (startIndex < toDoEntries.length) {
         entryIds = toDoEntries
             .sublist(startIndex, endIndex)
             .map((entry) => entry.id)
-            .toList();
+            .toList()
+            .cast<EntryId>();
       }
 
       return Future.delayed(
-        const Duration(milliseconds: 300),
+        const Duration(milliseconds: 200),
         () => Right(entryIds),
       );
     } on Exception catch (e) {
-      return Future.value(Left(ServerFailure(stackTrace: e.toString())));
+      return Future.value(
+        Left(
+          ServerFailure(stackTrace: e.toString()),
+        ),
+      );
     }
   }
 
   @override
   Future<Either<Failure, ToDoEntry>> updateToDoEntry(
       {required CollectionId collectionId, required EntryId entryId}) {
-    final index = toDoEntries.indexWhere((element) => element.id == entryId);
+    final index = toDoEntries.indexWhere(
+      (element) => element.id == entryId,
+    );
+
     final entryToUpdate = toDoEntries[index];
-    final updatedEntry =
-        toDoEntries[index].copyWith(isDone: !entryToUpdate.isDone);
+
+    final updatedEntry = toDoEntries[index].copyWith(
+      isDone: !entryToUpdate.isDone,
+    );
+
     toDoEntries[index] = updatedEntry;
 
     return Future.delayed(
-        const Duration(milliseconds: 100), () => Right(updatedEntry));
+      const Duration(milliseconds: 100),
+      () => Right(updatedEntry),
+    );
   }
 
   @override
   Future<Either<Failure, bool>> createToDoCollection(
       ToDoCollection collection) {
     final collectionToAdd = ToDoCollection(
-      id: CollectionId.fromUniqueString(toDoCollections.length.toString()),
+      id: CollectionId.fromUniqueString(
+        toDoCollections.length.toString(),
+      ),
       title: collection.title,
-      color: collection.color,
+      todoColor: collection.todoColor,
     );
-    toDoCollections.add(collectionToAdd);
+
+    toDoCollections.add(
+      collectionToAdd,
+    );
     return Future.delayed(
-        const Duration(milliseconds: 100), () => const Right(true));
+      const Duration(milliseconds: 100),
+      () => const Right(true),
+    );
   }
 
   @override
-  Future<Either<Failure, bool>> createToDoEntry(_, ToDoEntry entry) {
-    toDoEntries.add(entry);
+  Future<Either<Failure, bool>> createToDoEntry(
+    _,
+    ToDoEntry entry,
+  ) {
+    toDoEntries.add(
+      entry,
+    );
+
     return Future.delayed(
-        const Duration(milliseconds: 250), () => const Right(true));
+      const Duration(milliseconds: 250),
+      () => const Right(true),
+    );
+  }
+
+  @override
+  Future<Either<Failure, bool>> deleteToDoCollection(
+      {required CollectionId collectionId}) {
+    throw UnimplementedError();
   }
 }

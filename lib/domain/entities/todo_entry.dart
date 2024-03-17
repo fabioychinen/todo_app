@@ -32,5 +32,9 @@ class ToDoEntry extends Equatable {
   }
 
   @override
-  List<Object?> get props => [id, isDone, description];
+  List<Object?> get props => [
+        id,
+        isDone,
+        description,
+      ];
 }

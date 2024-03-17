@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:todo_app/application/pages/create_todo_entry/bloc/cubit/create_todo_entry_page_cubit.dart';
 import 'package:todo_app/domain/entities/unique_id.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
+import 'package:todo_app/domain/use_cases/create_todo_entry.dart';
 import 'package:todo_app/application/core/form_value.dart';
 import 'package:todo_app/application/core/page_config.dart';
-import 'package:todo_app/domain/use_cases/create_todo_entry.dart';
+import 'package:todo_app/application/pages/create_todo_entry/bloc/cubit/create_todo_entry_page_cubit.dart';
 
 typedef ToDoEntryItemAddedCallback = Function();
 
 class CreateToDoEntryPageExtra {
+  const CreateToDoEntryPageExtra({
+    required this.collectionId,
+    required this.toDoEntryItemAddedCallback,
+  });
+
   final CollectionId collectionId;
   final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
-
-  CreateToDoEntryPageExtra(
-      {required this.collectionId, required this.toDoEntryItemAddedCallback});
 }
 
 class CreateToDoEntryPageProvider extends StatelessWidget {
@@ -27,12 +29,13 @@ class CreateToDoEntryPageProvider extends StatelessWidget {
 
   final CollectionId collectionId;
   final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<CreateToDoEntryPageCubit>(
       create: (context) => CreateToDoEntryPageCubit(
         collectionId: collectionId,
-        addToDoEntry: CreateToDoEntry(
+        createToDoEntry: CreateToDoEntry(
           toDoRepository: RepositoryProvider.of<ToDoRepository>(context),
         ),
       ),
@@ -44,12 +47,16 @@ class CreateToDoEntryPageProvider extends StatelessWidget {
 }
 
 class CreateToDoEntryPage extends StatefulWidget {
-  const CreateToDoEntryPage(
-      {super.key, required this.toDoEntryItemAddedCallback});
+  const CreateToDoEntryPage({
+    super.key,
+    required this.toDoEntryItemAddedCallback,
+  });
+
   final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
+
   static const pageConfig = PageConfig(
+    icon: Icons.task_alt_rounded,
     name: 'create_todo_entry',
-    icon: Icons.add_task_rounded,
     child: Placeholder(),
   );
 
@@ -69,7 +76,12 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
         child: Column(
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Description'),
+              decoration: const InputDecoration(
+                labelText: 'Description',
+              ),
+              onChanged: (value) => context
+                  .read<CreateToDoEntryPageCubit>()
+                  .descriptionChanged(value),
               validator: (value) {
                 final currentValidationState = context
                         .read<CreateToDoEntryPageCubit>()
@@ -77,6 +89,7 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
                         .description
                         ?.validationStatus ??
                     ValidationStatus.pending;
+
                 switch (currentValidationState) {
                   case ValidationStatus.error:
                     return 'This field needs at least two characters to be valid';
@@ -85,11 +98,6 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
                     return null;
                 }
               },
-              onChanged: (value) {
-                context
-                    .read<CreateToDoEntryPageCubit>()
-                    .descriptionChanged(description: value);
-              },
             ),
             const SizedBox(
               height: 16,
@@ -97,6 +105,7 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
             ElevatedButton(
               onPressed: () {
                 final isValid = _formKey.currentState?.validate();
+
                 if (isValid == true) {
                   context.read<CreateToDoEntryPageCubit>().submit();
                   widget.toDoEntryItemAddedCallback.call();
@@ -104,7 +113,7 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
                 }
               },
               child: const Text('Save Entry'),
-            ),
+            )
           ],
         ),
       ),
