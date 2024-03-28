@@ -6,9 +6,7 @@ class ToDoDetailError extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Card(
-      child: Text(
-        'ERROR on detail page, please try again later',
-      ),
+      child: Text('ERROR on Detail Page, please try again'),
     );
   }
 }

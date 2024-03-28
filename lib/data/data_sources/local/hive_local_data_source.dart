@@ -1,9 +1,10 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:todo_app/data/data_sources/interfaces/todo_local_data_source_interface.dart';
 import 'package:todo_app/data/exceptions/exceptions.dart';
-import 'package:todo_app/data/models/todo_collection_model.dart';
 import 'package:todo_app/data/models/todo_entry_model.dart';
+import 'package:todo_app/data/models/todo_collection_model.dart';
 
 class HiveLocalDataSource implements ToDoLocalDataSourceInterface {
   late BoxCollection todoCollections;
@@ -12,10 +13,16 @@ class HiveLocalDataSource implements ToDoLocalDataSourceInterface {
 
   Future<void> init() async {
     if (!isInitialized) {
+      String path = '';
+      if (!kIsWeb) {
+        final directory = await getApplicationDocumentsDirectory();
+        path = directory.path;
+      }
+
       todoCollections = await BoxCollection.open(
         'todo',
         {'collection', 'entry'},
-        path: './',
+        path: path,
       );
       isInitialized = true;
     } else {
@@ -131,31 +138,5 @@ class HiveLocalDataSource implements ToDoLocalDataSourceInterface {
     await entryBox.put(collectionId, entryList);
 
     return updatedEntry;
-  }
-
-  @override
-  Future<bool> deleteToDoCollection({required String collectionId}) async {
-    final collectionBox = await _openCollectionBox();
-    final collection =
-        (await collectionBox.get(collectionId))?.cast<String, dynamic>();
-
-    if (collection == null) {
-      throw CollectionNotFoundException();
-    }
-
-    final entryBox = await _openEntryBox();
-    final entryList = await entryBox.get(collectionId);
-
-    if (entryList == null) {
-      throw EntryNotFoundException();
-    }
-
-    final entryIdList = entryList.cast<String, dynamic>().keys.toList();
-
-    await entryBox.deleteAll(entryIdList);
-
-    await collectionBox.delete(collectionId);
-
-    return true;
   }
 }

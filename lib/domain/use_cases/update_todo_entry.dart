@@ -4,31 +4,24 @@ import 'package:todo_app/domain/failures/failures.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 import 'package:todo_app/core/use_case.dart';
 
-class UpdateToDoEntry implements UseCase<ToDoEntry, ToDoEntryIdsParams> {
-  const UpdateToDoEntry({
-    required this.toDoRepository,
-  });
+class UpdateToDoEntry implements UseCase<ToDoEntry, ToDoEntryParams> {
+  const UpdateToDoEntry({required this.toDoRepository});
 
   final ToDoRepository toDoRepository;
 
   @override
-  Future<Either<Failure, ToDoEntry>> call(ToDoEntryIdsParams params) async {
+  Future<Either<Failure, ToDoEntry>> call(ToDoEntryParams params) async {
     try {
-      final toDoEntry = await toDoRepository.updateToDoEntry(
+      final loadedEntry = await toDoRepository.updateToDoEntry(
         collectionId: params.collectionId,
-        entryId: params.entryId,
+        entry: params.entry,
       );
-
-      return toDoEntry.fold(
+      return loadedEntry.fold(
         (left) => Left(left),
         (right) => Right(right),
       );
     } on Exception catch (e) {
-      return Left(
-        ServerFailure(
-          stackTrace: e.toString(),
-        ),
-      );
+      return Left(ServerFailure(stackTrace: e.toString()));
     }
   }
 }

@@ -90,7 +90,7 @@ class _ToDoCollectionColorPickerState extends State<ToDoCollectionColorPicker> {
                     setState(() => toDoCollectionPickerColor = color);
                     context
                         .read<CreateToDoCollectionPageCubit>()
-                        .colorChanged(color);
+                        .colorChanged(color as String);
                   },
                   customColorSwatchesAndNames: widget.customSwatches,
                 ),

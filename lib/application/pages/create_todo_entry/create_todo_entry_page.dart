@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,13 +12,13 @@ import 'package:todo_app/application/pages/create_todo_entry/bloc/cubit/create_t
 typedef ToDoEntryItemAddedCallback = Function();
 
 class CreateToDoEntryPageExtra {
-  const CreateToDoEntryPageExtra({
+  final CollectionId collectionId;
+  final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
+
+  CreateToDoEntryPageExtra({
     required this.collectionId,
     required this.toDoEntryItemAddedCallback,
   });
-
-  final CollectionId collectionId;
-  final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
 }
 
 class CreateToDoEntryPageProvider extends StatelessWidget {
@@ -35,7 +36,7 @@ class CreateToDoEntryPageProvider extends StatelessWidget {
     return BlocProvider<CreateToDoEntryPageCubit>(
       create: (context) => CreateToDoEntryPageCubit(
         collectionId: collectionId,
-        createToDoEntry: CreateToDoEntry(
+        addToDoEntry: CreateToDoEntry(
           toDoRepository: RepositoryProvider.of<ToDoRepository>(context),
         ),
       ),
@@ -55,8 +56,8 @@ class CreateToDoEntryPage extends StatefulWidget {
   final ToDoEntryItemAddedCallback toDoEntryItemAddedCallback;
 
   static const pageConfig = PageConfig(
-    icon: Icons.task_alt_rounded,
     name: 'create_todo_entry',
+    icon: Icons.add_task_rounded,
     child: Placeholder(),
   );
 
@@ -76,12 +77,8 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
         child: Column(
           children: [
             TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Description',
-              ),
-              onChanged: (value) => context
-                  .read<CreateToDoEntryPageCubit>()
-                  .descriptionChanged(value),
+              decoration:
+                  InputDecoration(labelText: 'todo_description_label'.tr()),
               validator: (value) {
                 final currentValidationState = context
                         .read<CreateToDoEntryPageCubit>()
@@ -89,7 +86,6 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
                         .description
                         ?.validationStatus ??
                     ValidationStatus.pending;
-
                 switch (currentValidationState) {
                   case ValidationStatus.error:
                     return 'This field needs at least two characters to be valid';
@@ -98,6 +94,11 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
                     return null;
                 }
               },
+              onChanged: (value) {
+                context
+                    .read<CreateToDoEntryPageCubit>()
+                    .descriptionChanged(description: value);
+              },
             ),
             const SizedBox(
               height: 16,
@@ -105,15 +106,14 @@ class _CreateToDoEntryPageState extends State<CreateToDoEntryPage> {
             ElevatedButton(
               onPressed: () {
                 final isValid = _formKey.currentState?.validate();
-
                 if (isValid == true) {
                   context.read<CreateToDoEntryPageCubit>().submit();
                   widget.toDoEntryItemAddedCallback.call();
                   context.pop();
                 }
               },
-              child: const Text('Save Entry'),
-            )
+              child: Text('todo_save'.tr()),
+            ),
           ],
         ),
       ),

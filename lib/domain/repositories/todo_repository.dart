@@ -8,16 +8,14 @@ abstract class ToDoRepository {
   Future<Either<Failure, List<ToDoCollection>>> readToDoCollections();
 
   Future<Either<Failure, ToDoEntry>> readToDoEntry(
-    CollectionId collectionId,
-    EntryId entryId,
-  );
+      CollectionId collectionId, EntryId entryId);
 
   Future<Either<Failure, List<EntryId>>> readToDoEntryIds(
       CollectionId collectionId);
 
   Future<Either<Failure, ToDoEntry>> updateToDoEntry({
     required CollectionId collectionId,
-    required EntryId entryId,
+    required ToDoEntry entry,
   });
 
   Future<Either<Failure, bool>> createToDoCollection(ToDoCollection collection);
@@ -26,7 +24,4 @@ abstract class ToDoRepository {
     CollectionId collectionId,
     ToDoEntry entry,
   );
-
-  Future<Either<Failure, bool>> deleteToDoCollection(
-      {required CollectionId collectionId});
 }

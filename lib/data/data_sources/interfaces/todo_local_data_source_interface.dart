@@ -7,31 +7,19 @@ abstract class ToDoLocalDataSourceInterface {
     required String entryId,
   });
 
-  Future<List<String>> getToDoEntryIds({
-    required String collectionId,
-  });
+  Future<List<String>> getToDoEntryIds({required String collectionId});
 
-  Future<ToDoCollectionModel> getToDoCollection({
-    required String collectionId,
-  });
+  Future<ToDoCollectionModel> getToDoCollection({required String collectionId});
 
   Future<List<String>> getToDoCollectionIds();
 
-  Future<bool> createToDoEntry({
-    required String collectionId,
-    required ToDoEntryModel entry,
-  });
+  Future<bool> createToDoEntry(
+      {required String collectionId, required ToDoEntryModel entry});
 
-  Future<bool> createToDoCollection({
-    required ToDoCollectionModel collection,
-  });
+  Future<bool> createToDoCollection({required ToDoCollectionModel collection});
 
   Future<ToDoEntryModel> updateToDoEntry({
     required String collectionId,
     required String entryId,
-  });
-
-  Future<bool> deleteToDoCollection({
-    required String collectionId,
   });
 }

@@ -25,7 +25,7 @@ void main() {
           (index) => ToDoCollection(
             id: CollectionId.fromUniqueString('id $index'),
             title: 'title $index',
-            todoColor: ToDoColor(
+            color: ToDoColor(
               colorIndex: index % ToDoColor.predefinedColors.length,
             ),
           ),

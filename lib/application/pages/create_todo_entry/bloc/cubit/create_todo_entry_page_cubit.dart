@@ -6,27 +6,25 @@ import 'package:todo_app/domain/use_cases/create_todo_entry.dart';
 import 'package:todo_app/application/core/form_value.dart';
 import 'package:todo_app/core/use_case.dart';
 
-part 'create_todo_entry_page_cubit_state.dart';
+part 'create_todo_entry_page_state.dart';
 
-class CreateToDoEntryPageCubit extends Cubit<CreateToDoEntryPageCubitState> {
+class CreateToDoEntryPageCubit extends Cubit<CreateToDoEntryPageState> {
   CreateToDoEntryPageCubit({
-    required this.createToDoEntry,
     required this.collectionId,
-  }) : super(const CreateToDoEntryPageCubitState());
+    required this.addToDoEntry,
+  }) : super(const CreateToDoEntryPageState());
 
-  final CreateToDoEntry createToDoEntry;
   final CollectionId collectionId;
+  final CreateToDoEntry addToDoEntry;
 
-  void descriptionChanged(String? description) {
+  void descriptionChanged({String? description}) {
     ValidationStatus currentStatus = ValidationStatus.pending;
 
-    // ignore: prefer_is_empty
-    if (description == null || description.isEmpty || description.length < 1) {
+    if (description == null || description.isEmpty || description.length < 2) {
       currentStatus = ValidationStatus.error;
     } else {
       currentStatus = ValidationStatus.success;
     }
-
     emit(
       state.copyWith(
         description: FormValue(
@@ -37,13 +35,13 @@ class CreateToDoEntryPageCubit extends Cubit<CreateToDoEntryPageCubitState> {
     );
   }
 
-  Future<void> submit() async {
-    await createToDoEntry.call(
+  void submit() async {
+    await addToDoEntry.call(
       ToDoEntryParams(
+        collectionId: collectionId,
         entry: ToDoEntry.empty().copyWith(
           description: state.description?.value,
         ),
-        collectionId: collectionId,
       ),
     );
   }

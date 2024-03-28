@@ -8,34 +8,31 @@ part 'todo_detail_cubit_state.dart';
 
 class ToDoDetailCubit extends Cubit<ToDoDetailCubitState> {
   ToDoDetailCubit({
-    required this.collectionId,
+    this.collectionId,
     required this.loadToDoEntryIdsForCollection,
-  }) : super(const ToDoDetailCubitLoadingState());
+  }) : super(ToDoDetailCubitLoadingState());
 
-  final CollectionId collectionId;
+  final CollectionId? collectionId;
   final LoadToDoEntryIdsForCollection loadToDoEntryIdsForCollection;
 
   Future<void> fetch() async {
-    emit(const ToDoDetailCubitLoadingState());
-
-    try {
-      final entryIds = await loadToDoEntryIdsForCollection.call(
-        CollectionIdParams(
-          collectionId: collectionId,
-        ),
-      );
-
-      if (entryIds.isLeft) {
-        emit(const ToDoDetailCubitErrorState());
-      } else {
-        emit(
-          ToDoDetailCubitLoadedState(
-            entryIds: entryIds.right,
-          ),
+    emit(ToDoDetailCubitLoadingState());
+    if (collectionId != null) {
+      try {
+        final entryIds = await loadToDoEntryIdsForCollection.call(
+          CollectionIdParam(collectionId: collectionId!),
         );
+
+        if (entryIds.isLeft) {
+          emit(ToDoDetailCubitErrorState());
+        } else {
+          emit(ToDoDetailCubitLoadedState(entryIds: entryIds.right));
+        }
+      } on Exception {
+        emit(ToDoDetailCubitErrorState());
       }
-    } on Exception {
-      emit(const ToDoDetailCubitErrorState());
+    } else {
+      emit(ToDoDetailCubitErrorState());
     }
   }
 }

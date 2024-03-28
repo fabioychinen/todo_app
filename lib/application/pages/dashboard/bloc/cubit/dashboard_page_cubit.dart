@@ -1,3 +1,5 @@
+// ignore_for_file: await_only_futures
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_app/domain/entities/unique_id.dart';
@@ -43,7 +45,7 @@ class DashboardPageCubit extends Cubit<DashboardPageCubitState> {
 
       for (final collection in collections) {
         final collectionEntryIdsEither = await loadToDoEntryIdsForCollection(
-          CollectionIdParams(collectionId: collection.id),
+          CollectionIdParam(collectionId: collection.id),
         );
         await collectionEntryIdsEither.fold(
           (failure) {
@@ -56,7 +58,7 @@ class DashboardPageCubit extends Cubit<DashboardPageCubitState> {
             totalEntryIds.addAll(collectionEntryIds);
             entryFutures
                 .addAll(collectionEntryIds.map((entryId) => loadToDoEntry(
-                      ToDoEntryIdsParams(
+                      ToDoEntryIdsParam(
                         collectionId: collection.id,
                         entryId: entryId,
                       ),

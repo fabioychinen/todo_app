@@ -6,21 +6,20 @@ import 'package:todo_app/application/core/page_config.dart';
 import 'package:todo_app/application/pages/dashboard/dashboard_page.dart';
 import 'package:todo_app/application/pages/detail/todo_detail_page.dart';
 import 'package:todo_app/application/pages/home/bloc/cubit/navigation_todo_cubit.dart';
+import 'package:todo_app/application/pages/home/component/login_button.dart';
 import 'package:todo_app/application/pages/overview/overview_page.dart';
 import 'package:todo_app/application/pages/settings/settings_page.dart';
 
 class HomePageProvider extends StatelessWidget {
-  const HomePageProvider({
-    super.key,
-    required this.tab,
-  });
+  const HomePageProvider({super.key, required this.tab});
 
   final String tab;
 
   @override
   Widget build(BuildContext context) {
-    return HomePage(
-      tab: tab,
+    return BlocProvider<NavigationToDoCubit>(
+      create: (_) => NavigationToDoCubit(),
+      child: HomePage(tab: tab),
     );
   }
 }
@@ -29,21 +28,19 @@ class HomePage extends StatefulWidget {
   HomePage({
     super.key,
     required String tab,
-  }) : index = tabs.indexWhere(
-          (element) => element.name == tab,
-        );
+  }) : index = tabs.indexWhere((element) => element.name == tab);
+
+  static const PageConfig pageConfig = PageConfig(
+    icon: Icons.home_rounded,
+    name: 'home',
+  );
+
+  final int index;
 
   static const tabs = [
     DashboardPage.pageConfig,
     OverviewPage.pageConfig,
   ];
-
-  final int index;
-
-  static const pageConfig = PageConfig(
-    icon: Icons.home_rounded,
-    name: 'home',
-  );
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -52,61 +49,64 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final destinations = HomePage.tabs
       .map(
-        (page) => NavigationDestination(
-          icon: Icon(page.icon),
-          label: page.name,
-        ),
+        (page) =>
+            NavigationDestination(icon: Icon(page.icon), label: page.name),
       )
       .toList();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: BlocListener<NavigationToDoCubit, NavigationToDoCubitState>(
+          listenWhen: (previous, current) =>
+              previous.isSecondBodyDisplayed != current.isSecondBodyDisplayed,
           listener: (context, state) {
             if (context.canPop() && (state.isSecondBodyDisplayed ?? false)) {
               context.pop();
             }
           },
-          listenWhen: (previous, current) =>
-              previous.isSecondBodyDisplayed != current.isSecondBodyDisplayed,
           child: AdaptiveLayout(
+            internalAnimations: false,
             primaryNavigation: SlotLayout(
               config: <Breakpoint, SlotLayoutConfig>{
                 Breakpoints.mediumAndUp: SlotLayout.from(
                   key: const Key('primary-navigation-medium'),
                   builder: (context) => AdaptiveScaffold.standardNavigationRail(
                     trailing: IconButton(
-                      key: const Key('open-settings'),
                       onPressed: () =>
                           context.pushNamed(SettingsPage.pageConfig.name),
                       icon: Icon(SettingsPage.pageConfig.icon),
                     ),
+                    leading: const LoginButton(),
+                    onDestinationSelected: (index) =>
+                        _tapOnNavigationDestination(context, index),
+                    selectedIndex: widget.index,
                     destinations: destinations
                         .map(
-                          (destination) => AdaptiveScaffold.toRailDestination(
-                            destination,
-                          ),
+                          (_) => AdaptiveScaffold.toRailDestination(_),
                         )
                         .toList(),
-                    onDestinationSelected: (index) =>
-                        _tapOnNavigationDesination(context, index),
-                    selectedIndex: widget.index,
-                    selectedLabelTextStyle: TextStyle(
-                      color: theme.colorScheme.onBackground,
-                    ),
-                    selectedIconTheme: IconThemeData(
-                      color: theme.colorScheme.onBackground,
-                    ),
-                    unselectedIconTheme: IconThemeData(
-                      color: theme.colorScheme.onBackground.withOpacity(0.5),
-                    ),
                   ),
                 ),
               },
             ),
+            topNavigation: SlotLayout(config: <Breakpoint, SlotLayoutConfig>{
+              Breakpoints.small: SlotLayout.from(
+                key: const Key('top-navigation-small'),
+                builder: (context) => Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: () =>
+                          context.pushNamed(SettingsPage.pageConfig.name),
+                      icon: const Icon(Icons.settings),
+                    ),
+                    const LoginButton(),
+                  ],
+                ),
+              ),
+            }),
             bottomNavigation: SlotLayout(
               config: <Breakpoint, SlotLayoutConfig>{
                 Breakpoints.small: SlotLayout.from(
@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                     destinations: destinations,
                     currentIndex: widget.index,
                     onDestinationSelected: (value) =>
-                        _tapOnNavigationDesination(context, value),
+                        _tapOnNavigationDestination(context, value),
                   ),
                 ),
               },
@@ -140,6 +140,7 @@ class _HomePageState extends State<HomePage> {
                               final selectedId = state.selectedCollectionId;
                               final isSecondBodyDisplayed =
                                   Breakpoints.mediumAndUp.isActive(context);
+
                               context
                                   .read<NavigationToDoCubit>()
                                   .secondBodyHasChanged(
@@ -148,15 +149,12 @@ class _HomePageState extends State<HomePage> {
                                   );
 
                               if (selectedId == null) {
-                                return Container();
-                              } else {
-                                return ToDoDetailPageProvider(
-                                  key: Key(
-                                    selectedId.value,
-                                  ),
-                                  collectionId: selectedId,
-                                );
+                                return const Placeholder();
                               }
+                              return ToDoDetailPageProvider(
+                                key: Key(selectedId.value),
+                                collectionId: selectedId,
+                              );
                             },
                           ),
                 ),
@@ -168,7 +166,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  void _tapOnNavigationDesination(BuildContext context, int index) =>
+  void _tapOnNavigationDestination(BuildContext context, int index) =>
       context.goNamed(
         HomePage.pageConfig.name,
         pathParameters: {

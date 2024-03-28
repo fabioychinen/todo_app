@@ -15,6 +15,7 @@ class CacheFailure extends Failure with EquatableMixin {
   CacheFailure({this.stackTrace});
 
   final String? stackTrace;
+
   @override
   List<Object?> get props => [stackTrace];
 }

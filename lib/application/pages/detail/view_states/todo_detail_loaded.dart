@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -10,11 +11,11 @@ class ToDoDetailLoaded extends StatelessWidget {
   const ToDoDetailLoaded({
     super.key,
     required this.entryIds,
-    required this.collectionId,
+    this.collectionId,
   });
 
   final List<EntryId> entryIds;
-  final CollectionId collectionId;
+  final CollectionId? collectionId;
 
   @override
   Widget build(BuildContext context) {
@@ -23,34 +24,33 @@ class ToDoDetailLoaded extends StatelessWidget {
         padding: const EdgeInsets.all(8.0),
         child: Stack(
           children: [
-            ListView.builder(
-              itemCount: entryIds.length,
-              itemBuilder: (context, index) => ToDoEntryItemProvider(
-                collectionId: collectionId,
-                entryId: entryIds[index],
+            if (collectionId != null)
+              ListView.builder(
+                itemCount: entryIds.length,
+                itemBuilder: (context, index) => ToDoEntryItemProvider(
+                  collectionId: collectionId!,
+                  entryId: entryIds[index],
+                ),
               ),
-            ),
             Align(
               alignment: Alignment.bottomRight,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: FloatingActionButton(
-                  key: const Key('create-todo-entry'),
-                  heroTag: 'create-todo-entry',
-                  onPressed: () {
-                    context.pushNamed(
-                      CreateToDoEntryPage.pageConfig.name,
-                      extra: CreateToDoEntryPageExtra(
-                        collectionId: collectionId,
-                        toDoEntryItemAddedCallback:
-                            context.read<ToDoDetailCubit>().fetch,
-                      ),
-                    );
-                  },
-                  child: const Icon(
-                    Icons.add_rounded,
-                  ),
-                ),
+              child: FloatingActionButton(
+                key: const Key('create-todo-entry'),
+                heroTag: 'create-todo-entry',
+                tooltip: 'detail_add_todo'.tr(),
+                onPressed: collectionId == null
+                    ? null
+                    : () {
+                        context.pushNamed(
+                          CreateToDoEntryPage.pageConfig.name,
+                          extra: CreateToDoEntryPageExtra(
+                            collectionId: collectionId!,
+                            toDoEntryItemAddedCallback:
+                                context.read<ToDoDetailCubit>().fetch,
+                          ),
+                        );
+                      },
+                child: const Icon(Icons.add_rounded),
               ),
             )
           ],

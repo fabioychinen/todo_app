@@ -1,12 +1,10 @@
-import 'package:either_dart/either.dart';
 import 'package:todo_app/domain/failures/failures.dart';
+import 'package:either_dart/either.dart';
 import 'package:todo_app/domain/repositories/todo_repository.dart';
 import 'package:todo_app/core/use_case.dart';
 
 class CreateToDoEntry implements UseCase<bool, ToDoEntryParams> {
-  CreateToDoEntry({
-    required this.toDoRepository,
-  });
+  CreateToDoEntry({required this.toDoRepository});
 
   final ToDoRepository toDoRepository;
 
@@ -23,11 +21,7 @@ class CreateToDoEntry implements UseCase<bool, ToDoEntryParams> {
         (right) => Right(right),
       );
     } on Exception catch (e) {
-      return Left(
-        ServerFailure(
-          stackTrace: e.toString(),
-        ),
-      );
+      return Left(ServerFailure(stackTrace: e.toString()));
     }
   }
 }

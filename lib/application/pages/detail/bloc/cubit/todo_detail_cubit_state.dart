@@ -7,13 +7,9 @@ abstract class ToDoDetailCubitState extends Equatable {
   List<Object> get props => [];
 }
 
-class ToDoDetailCubitLoadingState extends ToDoDetailCubitState {
-  const ToDoDetailCubitLoadingState();
-}
+class ToDoDetailCubitLoadingState extends ToDoDetailCubitState {}
 
-class ToDoDetailCubitErrorState extends ToDoDetailCubitState {
-  const ToDoDetailCubitErrorState();
-}
+class ToDoDetailCubitErrorState extends ToDoDetailCubitState {}
 
 class ToDoDetailCubitLoadedState extends ToDoDetailCubitState {
   const ToDoDetailCubitLoadedState({required this.entryIds});
@@ -21,7 +17,5 @@ class ToDoDetailCubitLoadedState extends ToDoDetailCubitState {
   final List<EntryId> entryIds;
 
   @override
-  List<Object> get props => [
-        entryIds,
-      ];
+  List<Object> get props => [entryIds];
 }

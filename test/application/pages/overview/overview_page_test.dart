@@ -1,9 +1,12 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unused_local_variable
+
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:todo_app/application/pages/overview/bloc/cubit/todo_overview_cubit.dart';
 import 'package:todo_app/application/pages/overview/overview_page.dart';
+
 import 'package:todo_app/domain/entities/todo_collection.dart';
 import 'package:todo_app/domain/entities/todo_color.dart';
 import 'package:todo_app/domain/entities/unique_id.dart';
@@ -15,7 +18,7 @@ void main() {
   Widget widgetUnderTest({required ToDoOverviewCubit cubit}) {
     return MaterialApp(
       home: BlocProvider<ToDoOverviewCubit>(
-        create: (context) => cubit..readToDoOverviewCollections(),
+        create: (context) => cubit..readToDoCollections(),
         child: const Scaffold(body: OverviewPage()),
       ),
     );
@@ -46,12 +49,11 @@ void main() {
       testWidgets(
         'Loaded when cubit emits ToDo Overview Cubit Loaded State',
         (widgetTester) async {
-          // ignore: unused_local_variable
           final collections = [
             ToDoCollection(
               id: CollectionId.fromUniqueString(1.toString()),
               title: 'Overview test',
-              todoColor: const ToDoColor(
+              color: ToDoColor(
                 colorIndex: 1,
               ),
             ),
@@ -60,7 +62,7 @@ void main() {
           whenListen(
             mockToDoOverviewCubit,
             Stream.fromIterable(
-                [ToDoOverviewCubitLoadedState(collections: const [])]),
+                [ToDoOverviewCubitLoadedState(collections: [])]),
             initialState: ToDoOverviewCubitLoadingState(),
           );
 

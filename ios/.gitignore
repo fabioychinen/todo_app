@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+# exclude firebase config
+ios/Runner/GoogleService-Info.plist
+ios/firebase_app_id_file.json

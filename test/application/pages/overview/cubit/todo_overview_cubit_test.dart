@@ -8,24 +8,18 @@ import 'package:todo_app/domain/entities/todo_collection.dart';
 import 'package:todo_app/domain/entities/todo_color.dart';
 import 'package:todo_app/domain/entities/unique_id.dart';
 import 'package:todo_app/domain/failures/failures.dart';
-import 'package:todo_app/domain/use_cases/load_overview_todo_collections.dart';
+import 'package:todo_app/domain/use_cases/load_todo_collections.dart';
 
-import '../../../../domain/use_cases/delete_todo_collections_test.dart';
-
-class MockToDoOverviewCubit extends Mock
-    implements LoadOverviewToDoCollections {}
+class MockLoadToDoCollections extends Mock implements LoadToDoCollections {}
 
 void main() {
   group('ToDoOverviewCubit Test:', () {
-    final mockToDoOverviewCubit = MockToDoOverviewCubit();
-    final mockDeleteToDoCollection = MockDeleteToDoCollection();
+    final mockLoadToDoCollections = MockLoadToDoCollections();
     final expectedValue = Right<Failure, List<ToDoCollection>>([
       ToDoCollection(
-        id: CollectionId.fromUniqueString(1.toString()),
+        id: CollectionId.fromUniqueString("1"),
         title: 'bloc test',
-        todoColor: const ToDoColor(
-          colorIndex: 1,
-        ),
+        color: ToDoColor(colorIndex: 1),
       ),
     ]);
 
@@ -35,34 +29,34 @@ void main() {
     blocTest<ToDoOverviewCubit, ToDoOverviewCubitState>(
       'emits [ToDoOverviewCubitLoadingState, ToDoOverviewCubitLoadedState] when ToDoOverview is called.',
       setUp: () {
-        when(() => mockToDoOverviewCubit(NoParams()))
+        when(() => mockLoadToDoCollections(NoParams()))
             .thenAnswer((_) => Future.value(expectedValue));
       },
       build: () => ToDoOverviewCubit(
-        deleteToDoCollection: mockDeleteToDoCollection,
-        loadOverviewToDoCollections: mockToDoOverviewCubit,
+        loadToDoCollections: mockLoadToDoCollections,
       ),
-      act: (ToDoOverviewCubit bloc) => bloc.readToDoOverviewCollections(),
+      act: (ToDoOverviewCubit bloc) => bloc.readToDoCollections(),
       expect: () => <ToDoOverviewCubitState>[
-        ToDoOverviewCubitLoadingState(),
-        ToDoOverviewCubitLoadedState(collections: const [])
+        const ToDoOverviewCubitLoadingState(),
+        ToDoOverviewCubitLoadedState(
+            collections:
+                expectedValue.fold((_) => [], (collections) => collections))
       ],
     );
 
     blocTest<ToDoOverviewCubit, ToDoOverviewCubitState>(
       'emits [ToDoOverviewCubitLoadingState, ToDoOverviewCubitErrorState] when TodoUseCase is called and error occurred.',
       setUp: () {
-        when(() => mockToDoOverviewCubit(NoParams()))
+        when(() => mockLoadToDoCollections(NoParams()))
             .thenAnswer((_) => Future.value(expectedFailure));
       },
       build: () => ToDoOverviewCubit(
-        deleteToDoCollection: mockDeleteToDoCollection,
-        loadOverviewToDoCollections: mockToDoOverviewCubit,
+        loadToDoCollections: mockLoadToDoCollections,
       ),
-      act: (ToDoOverviewCubit bloc) => bloc.readToDoOverviewCollections(),
+      act: (ToDoOverviewCubit bloc) => bloc.readToDoCollections(),
       expect: () => <ToDoOverviewCubitState>[
-        ToDoOverviewCubitLoadingState(),
-        ToDoOverviewCubitErrorState()
+        const ToDoOverviewCubitLoadingState(),
+        const ToDoOverviewCubitErrorState()
       ],
     );
   });

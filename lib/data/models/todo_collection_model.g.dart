@@ -8,9 +8,9 @@ part of 'todo_collection_model.dart';
 
 ToDoCollectionModel _$ToDoCollectionModelFromJson(Map<String, dynamic> json) =>
     ToDoCollectionModel(
-      colorIndex: json['colorIndex'] as int,
       id: json['id'] as String,
       title: json['title'] as String,
+      colorIndex: json['colorIndex'] as int,
     );
 
 Map<String, dynamic> _$ToDoCollectionModelToJson(
